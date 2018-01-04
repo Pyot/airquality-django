@@ -1,0 +1,4 @@
+#!/bin/bash
+
+watch -n 1 tail -n 30 /var/www/venv/src/logs/celery-worker.log 
+

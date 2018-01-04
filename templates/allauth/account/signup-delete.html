@@ -1,0 +1,10 @@
+<form id="signup_form" method="post" action="{% url 'account_signup' %}" class="form-inline">
+  {% csrf_token %}
+  {% crispy form %}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+{#  <div class="form-actions">#}
+{#  <button class="btn btn-primary" type="submit">Sign Up</button>#}
+{#  </div>#}
+</form>

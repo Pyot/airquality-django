@@ -1,0 +1,18 @@
+{% extends "airpollution/airpollution_base.html" %}
+{% block body_block %}
+
+
+  <h1>Station List</h1>
+  <form action="" method="GET">
+  <input type="text" placeholder="Search" name="q" value="{{ request.GET.q }}">
+  <input type="submit" value="Search">
+  </form>
+  <ol>
+    {% for station in stations %}
+      <li><a href="{{station.id}}">{{station.google_town}}</a></li>
+
+    {% endfor %}
+  </ol>
+
+
+{% endblock %}

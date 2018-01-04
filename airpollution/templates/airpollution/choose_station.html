@@ -1,0 +1,19 @@
+{% extends "airpollution/airpollution_base.html" %}
+{% block body_block %}
+
+  <h1>Station Details</h1>
+  <form action="" method="GET">
+  <input type="text" placeholder="Search" name="q" value="{{ request.GET.q }}">
+  <input type="submit" value="Search">
+  </form>
+  {% for station in station_list_a  %}
+    <h3>{{station.station_name.google_town}}</h3>
+    <h4>{{station.station_name.uid}}</h4>
+    <h4>{{station.timestamp}}</h4>
+    <p>PM25: {{station.pm25}}</p>
+    <p>PM10: {{station.pm10}}</p>
+  {% endfor %}
+
+
+
+{% endblock %}

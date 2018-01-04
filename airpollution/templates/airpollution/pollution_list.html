@@ -1,0 +1,16 @@
+{% extends "airpollution/airpollution_base.html" %}
+{% block body_block %}
+  <h1>Station Details</h1>
+  <ol>
+  {% for station in station_pollution.pollution.all %}
+
+      <p>PM25: {{station.pm25}}</p>
+      <p>PM10: {{station.pm10}}</p>
+      <p>o3: {{station.o3}}</p>
+      <p>no2: {{station.no2}}</p>
+
+
+  {% endfor %}
+  </ol>
+
+{% endblock %}

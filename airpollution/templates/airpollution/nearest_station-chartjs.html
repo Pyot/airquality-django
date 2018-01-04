@@ -1,0 +1,157 @@
+{% extends "airpollution/airpollution_base.html" %}
+{% load i18n %}
+
+
+{% block body_block %}
+{% if user.is_anonymous and address == None%}
+{{address}}
+<form class="login" method="POST" action="{% url 'account_login' %}">
+  {% csrf_token %}
+  {{ login_form.as_p }}
+  {% if redirect_field_value %}
+  <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+  {% endif %}
+  <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
+  <button class="primaryAction" type="submit">{% trans "Sign In" %}</button>
+</form>
+
+{% endif %}
+
+
+  <h1>Nearest Station</h1>
+  <form action="" method="GET">
+  <input type="text" placeholder="Search" name="q" value="{{ request.GET.q }}">
+  <input type="submit" value="Search">
+  </form>
+  </br>
+  <p>Latitude {{lat}}</p>
+  <p>Longtitude {{lon}}</p>
+
+
+  {% for station in closest_station_6_data  %}
+  <h3>Dane z najbliższej stacji:</h3>
+  <h3>{{station.station_name.station_name}}</h3>
+  <p>PM25:  {{station.pm25}}</p>
+  <p>PM10: {{station.pm10}}</p>
+  <p>o3: {{station.o3}}</p>
+  <p>no2: {{station.no2}}</p>
+  <p>os2: {{station.so2}}</p>
+  <p>nh3: {{station.nh3}}</p>
+  <p>pb: {{station.pb}}</p>
+  <p>Dane z: {{station.time}}</p>
+  <p>Odegłość: {{station.distance}}km</p>
+
+
+  {% endfor %}
+
+  <canvas id="myChart" width="400" height="400"></canvas>
+
+  <h1></h1>
+  <div class="pagination">
+      <span class="step-links">
+          {% if closest_station_6_data.has_previous %}
+              <a href="?{{page_request_var}}={{ closest_station_6_data.previous_page_number }}&q={{request.GET.q}} ">Poprzednia stacja</a>
+          {% endif %}
+
+          <span class="current">
+              {% if address != None %}
+              Stacja {{ closest_station_6_data.number }} of {{ closest_station_6_data.paginator.num_pages }}.
+
+              {% endif %}
+
+          </span>
+
+          {% if closest_station_6_data.has_next %}
+              <a href="?{{page_request_var}}={{ closest_station_6_data.next_page_number }}&q={{request.GET.q}}">Koleja Stacja </a>
+          {% endif %}
+      </span>
+  </div>
+    <a href="{% url 'account_logout' %}">LOG OUT </a>
+{% block javascript %}
+    <script type="text/javascript">
+
+
+      {% for station in closest_station_6_data  %}
+
+      var station_name = '{{station.station_name.station_name}}';
+      var pm25 = '{{station.pm25}}';
+      var pm10 =  '{{station.pm10}}';
+      var o3 = '{{station.o3}}';
+      var no2 = '{{station.no2}}';
+      var os2 = '{{station.so2}}';
+      var nh3 = '{{station.nh3}}';
+      var pb = '{{station.pb}}';
+      var time = '{{station.time}}';
+      var distance = '{{station.distance}}';
+
+
+      {% endfor %}
+
+      let pollutionNorms = [['rgba(75, 192, 192, 0.1)', 35],[['rgba(255, 159, 64, 0.1)'], 53], ['rgba(255, 99, 132, 0.1)', 64]];
+      let myChart = document.getElementById('myChart').getContext('2d');
+
+      // Global Options
+      Chart.defaults.global.defaultFontFamily = 'Lato';
+      Chart.defaults.global.defaultFontSize = 18;
+      Chart.defaults.global.defaultFontColor = '#777';
+
+
+
+
+      let massPopChart = new Chart(myChart, {
+        type:'doughnut', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+        data:{
+          labels:[ "64", pm25.toString()],
+          datasets:[{
+
+            label:'Population',
+            data:[pm25, 64],
+            //backgroundColor:'green',
+            backgroundColor:[pollutionNorms[0][0],
+
+      pollutionNorms[1][0]],
+
+            borderWidth:1,
+            borderColor:'#777',
+            hoverBorderWidth:3,
+            hoverBorderColor:'#000'
+          }]
+        },
+        options:{
+
+
+          title:{
+            display:true,
+            text: station_name,
+            fontSize:25
+          },
+
+          legend:{
+            display:true,
+
+
+            position:'bottom',
+            labels:{
+              fontColor:'#000'
+            }
+          },
+          layout:{
+            padding:{
+              left:50,
+              right:0,
+              bottom:0,
+              top:0
+            }
+          },
+          tooltips:{
+            enabled:true
+          },
+        }
+      });
+
+
+
+    </script>
+    {% endblock javascript %}
+
+{% endblock %}
