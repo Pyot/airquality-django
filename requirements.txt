@@ -14,7 +14,7 @@ Django==1.11.7
 django-allauth==0.33.0
 django-bootstrap3==9.0.0
 django-celery-beat==1.0.1
-django-celery-results==1.0.1
+django-celery-results==2.4.0
 django-crispy-forms==1.6.1
 gunicorn==19.7.1
 idna==2.6
